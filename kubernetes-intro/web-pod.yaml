@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web
+  labels:
+    app: web
+spec:
+  containers:
+    - name: nginx-non-root
+      image: 99francs/nginx-non-root:1.19.5
+      volumeMounts:
+        - mountPath: /app
+          name: app
+  initContainers:
+    - name: init-web
+      image: busybox:1.31.0
+      command: ['sh', '-c', 'wget -O- https://tinyurl.com/otus-k8s-intro | sh']
+      volumeMounts:
+        - mountPath: /app
+          name: app
+  volumes:
+    - name: app
+      emptyDir: {}
